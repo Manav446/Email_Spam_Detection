@@ -11,12 +11,15 @@ from src.email_classification.exception import CustomException
 logger = logging.getLogger("ConfigurationManager")
 
 class ConfigurationManager:
-    def __init__(self, config_filePath, params_filePath) -> None:
-        config_filePath = constants.CONFIG_FILE_PATH
-        params_filePath = constants.PARAMS_FILE_PATH
+    def __init__(self, 
+            config_filePath = constants.CONFIG_FILE_PATH, 
+            #params_filePath = constants.PARAMS_FILE_PATH
+            ) -> None:
+        config_filePath
+        #params_filePath 
 
         self.config = read_yaml(config_filePath)
-        self.params = read_yaml(params_filePath)
+        #self.params = read_yaml(params_filePath)
 
         create_directories([self.config.artifacts_root])
     
