@@ -1,0 +1,15 @@
+numpy 
+pandas 
+tensorflow[and-cuda]
+matplotlib
+seaborn
+nltk
+ensure==1.0.2
+tqdm
+regex
+scikit-learn
+from-root
+fastapi==0.78.0
+uvicorn==0.18.3
+Jinja2==3.1.2
+-e .
