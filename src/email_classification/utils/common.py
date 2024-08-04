@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import yaml
 import json
 import joblib
@@ -8,13 +9,15 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 import base64
-
-
+import nltk
+from tqdm import tqdm
 
 from src.email_classification.logger import logging
 from src.email_classification.constants import constants
 from src.email_classification.exception import CustomException
 
+nltk.download("punkt")
+nltk.download("stopwords")
 logger = logging.getLogger("CommonFile")
 
 @ensure_annotations
@@ -50,9 +53,10 @@ def create_directories(path_to_directories: list, verbose=True):
         ignore_log (bool, optional): ignore if multiple dirs is to be created. Defaults to False.
     """
     for path in path_to_directories:
-        os.makedirs(path, exist_ok=True)
-        if verbose:
-            logger.info(f"created directory at: {path}")
+        if not os.path.exists(path):
+            os.makedirs(path, exist_ok=True)
+            if verbose:
+                logger.info(f"created directory at: {path}")
 
 
 @ensure_annotations
@@ -126,3 +130,19 @@ def get_size(path: Path) -> str:
     """
     size_in_kb = round(os.path.getsize(path)/1024)
     return f"~ {size_in_kb} KB"
+
+@ensure_annotations
+def clean_text(data):
+    logger.info("Entering into clean_text().....................")
+    corpus = []
+    stem = nltk.SnowballStemmer("english")
+    try:
+        for i in tqdm(range(0, len(data))):
+            review = re.sub("[^a-zA-Z]", " ", data[constants.INPUT_FILE_INDEPENDENT_VARIABLE][i])
+            review = review.lower().split()
+            review = [stem.stem(word) for word in review if not word in set(nltk.corpus.stopwords.words("english"))]
+            review = " ".join(review)
+            corpus.append(review)
+    except Exception as e:
+        raise CustomException(e, sys)
+    return corpus

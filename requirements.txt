@@ -1,6 +1,8 @@
 numpy 
 pandas 
-tensorflow[and-cuda]
+torch
+torchvision 
+torchaudio
 matplotlib
 seaborn
 nltk
